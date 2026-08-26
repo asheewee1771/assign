@@ -150,6 +150,21 @@ npm run dev
 
 ## 7. Check it actually works
 
+**One command checks everything:**
+
+```bash
+npm run verify:supabase -- "your-poc-passphrase"
+```
+
+It confirms the tables exist, the password hash is NOT readable, row level
+security blocks direct UPDATE and DELETE, the same person is rejected for both
+reviewer slots, a wrong password is refused, ownership is enforced, and realtime
+connects. It creates one `[verify]` request and deletes it again.
+
+Omit the password to run just the read-only and security checks.
+
+### Or walk it by hand
+
 Walk this once — it exercises every rule:
 
 1. The page shows the tracker, not "Not connected yet". ✅ URL and key are good.
