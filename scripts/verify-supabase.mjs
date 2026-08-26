@@ -118,6 +118,22 @@ console.log('\nSecurity (row level security must block direct writes)')
   }
 }
 
+// -------------------------------------------------- published-password check
+// The example passphrase is committed in this repo. If it works, anyone who can
+// read the repo is a POC.
+console.log("\nPOC password")
+{
+  const { data } = await db.rpc("verify_poc", { p_password: "correct-horse-battery-staple" })
+  if (data === true) {
+    bad(
+      "POC password is not the published example",
+      "It IS the example from supabase/set-poc-password.sql, which is public. Anyone reading the repo can act as POC. Change it now.",
+    )
+  } else {
+    pass("POC password is not the published example")
+  }
+}
+
 // ------------------------------------------------------------------- rules
 if (!pocPassword) {
   console.log('\nRules: skipped - pass the POC password to run them:')
