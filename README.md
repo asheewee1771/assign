@@ -24,26 +24,17 @@ a bug, two people volunteer simultaneously, or someone calls the API directly.
 
 ## Setup
 
-The app needs a Supabase project — that part needs your login, so it can't be
-scripted for you.
+**→ Full step-by-step guide: [SETUP.md](SETUP.md)** (about 10 minutes)
 
-1. **Create a project** at [supabase.com](https://supabase.com) (free tier;
-   Singapore is the closest region).
-2. **Run the schema.** SQL Editor → paste `supabase/schema.sql` → Run.
-3. **Set the POC password.** Edit the passphrase in
-   `supabase/set-poc-password.sql`, then run it. Use 4+ random words — POC
-   functions are callable from the public page, so a short password is guessable.
-   Only a bcrypt hash is stored.
-4. *(Optional)* **Seed a roster** with `supabase/seed.sql`, or just add reviewers
-   in the app once you unlock the POC panel.
-5. **Connect the app.** Copy `.env.example` to `.env` and fill in:
-   - `VITE_SUPABASE_URL` — Project Settings → Data API → Project URL
-   - `VITE_SUPABASE_ANON_KEY` — Project Settings → API Keys → `anon` / public
+The short version:
 
-   Both are safe to expose. **Never** put the `service_role` key here.
+1. Create a free Supabase project.
+2. SQL Editor → run `supabase/schema.sql`.
+3. Edit the passphrase in `supabase/set-poc-password.sql`, then run it.
+4. `cp .env.example .env` and paste in your project URL and anon key.
+5. `npm install && npm run dev`.
 
-Then `npm install && npm run dev`. Without `.env` the app runs and shows these
-steps instead of failing.
+Without `.env` the app still runs and shows these steps on screen.
 
 ## Security model, and what it doesn't cover
 

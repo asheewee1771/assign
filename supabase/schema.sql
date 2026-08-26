@@ -317,3 +317,42 @@ begin
   return v;
 end;
 $$;
+
+-- ------------------------------------------------------------- realtime
+-- Postgres Changes only delivers events for tables in this publication, and new
+-- tables are NOT added automatically. Without this, the app's live updates
+-- silently never fire and everyone has to refresh manually.
+
+do $$
+begin
+  alter publication supabase_realtime add table requests;
+exception
+  when duplicate_object then null;   -- already added
+  when undefined_object then null;   -- plain Postgres, no Supabase realtime
+end $$;
+
+do $$
+begin
+  alter publication supabase_realtime add table reviewers;
+exception
+  when duplicate_object then null;
+  when undefined_object then null;
+end $$;
+
+-- ------------------------------------------------------------- privileges
+-- Only verify_poc is meant to be called from the browser. is_poc and require_poc
+-- are internal helpers, so keep them off the public API surface.
+
+revoke execute on function is_poc(text)      from public, anon, authenticated;
+revoke execute on function require_poc(text) from public, anon, authenticated;
+
+grant execute on function verify_poc(text)                              to anon, authenticated;
+grant execute on function volunteer_first(uuid, uuid)                   to anon, authenticated;
+grant execute on function withdraw_first(uuid, uuid)                    to anon, authenticated;
+grant execute on function start_review(uuid)                            to anon, authenticated;
+grant execute on function remove_own_request(uuid, text)                to anon, authenticated;
+grant execute on function poc_assign_reviewer(uuid, text, uuid, text)   to anon, authenticated;
+grant execute on function poc_complete_request(uuid, text)              to anon, authenticated;
+grant execute on function poc_remove_request(uuid, text)                to anon, authenticated;
+grant execute on function poc_add_reviewer(text, text)                  to anon, authenticated;
+grant execute on function poc_deactivate_reviewer(uuid, text)           to anon, authenticated;
