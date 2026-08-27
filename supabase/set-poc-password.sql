@@ -1,21 +1,32 @@
 -- Sets the POC password. Run ONCE, after schema.sql, in the Supabase SQL Editor.
 --
--- Change the value on the marked line before running. This script deliberately
--- REFUSES to run while it still says the example value, because that example is
--- committed in a public repository -- anyone reading it would know the password.
+-- ############################################################################
+-- #  DO NOT COMMIT YOUR REAL PASSPHRASE.                                     #
+-- #                                                                          #
+-- #  This repository is public. Edit the value in the Supabase SQL Editor    #
+-- #  (paste this file in, change the line, run it) and leave the copy on     #
+-- #  disk with the placeholder. A passphrase committed here is a passphrase  #
+-- #  anyone can read.                                                        #
+-- ############################################################################
 --
--- Use 4+ random words. POC functions are callable from the public page, so a
--- short password or a PIN can be guessed by repeated calls. Only a bcrypt hash
--- is stored; the plaintext is never saved.
+-- Use 4+ random words, 16 characters minimum. POC functions are callable from
+-- the public page, so a short password can be guessed by repeated calls. Only a
+-- bcrypt hash is stored; the plaintext is never saved.
 
 do $$
 declare
-  -- >>> CHANGE THIS LINE <<<
-  new_password text := 'changeme123';
+  -- >>> CHANGE THIS IN THE SQL EDITOR, NOT IN THE REPO <<<
+  new_password text := 'REPLACE-THIS-BEFORE-RUNNING';
 begin
-  if new_password = 'correct-horse-battery-staple' then
+  -- Known placeholders. Anything published in this repo must never be a live
+  -- password, so refuse rather than quietly setting something guessable.
+  if new_password in (
+    'REPLACE-THIS-BEFORE-RUNNING',
+    'correct-horse-battery-staple',
+    'changeme123'
+  ) then
     raise exception
-      'Change the passphrase in this file before running it. The example value is published in the repo.';
+      'That is a placeholder published in this repo. Choose your own passphrase (4+ random words) and do not commit it.';
   end if;
 
   if length(new_password) < 16 then

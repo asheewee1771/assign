@@ -119,18 +119,28 @@ console.log('\nSecurity (row level security must block direct writes)')
 }
 
 // -------------------------------------------------- published-password check
-// The example passphrase is committed in this repo. If it works, anyone who can
-// read the repo is a POC.
-console.log("\nPOC password")
+// Any passphrase committed to this repo is readable by anyone. If one of them
+// works on the live database, every reader of the repo is a POC.
+const PUBLISHED_PLACEHOLDERS = [
+  'REPLACE-THIS-BEFORE-RUNNING',
+  'correct-horse-battery-staple',
+  'changeme123',
+]
+
+console.log('\nPOC password')
 {
-  const { data } = await db.rpc("verify_poc", { p_password: "correct-horse-battery-staple" })
-  if (data === true) {
+  const live = []
+  for (const candidate of PUBLISHED_PLACEHOLDERS) {
+    const { data } = await db.rpc('verify_poc', { p_password: candidate })
+    if (data === true) live.push(candidate)
+  }
+  if (live.length) {
     bad(
-      "POC password is not the published example",
-      "It IS the example from supabase/set-poc-password.sql, which is public. Anyone reading the repo can act as POC. Change it now.",
+      'POC password is not a published placeholder',
+      `"${live[0]}" is committed in this repo and WORKS. Anyone reading it can act as POC. Change it now.`,
     )
   } else {
-    pass("POC password is not the published example")
+    pass('POC password is not a published placeholder')
   }
 }
 
