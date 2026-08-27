@@ -11,7 +11,7 @@
 do $$
 declare
   -- >>> CHANGE THIS LINE <<<
-  new_password text := 'correct-horse-battery-staple';
+  new_password text := 'changeme123';
 begin
   if new_password = 'correct-horse-battery-staple' then
     raise exception
